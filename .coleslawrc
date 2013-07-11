@@ -1,0 +1,8 @@
+(:author "Julian Stecklina"
+ :deploy #.cl-user::*build-dir*
+ :domain "http://polar-forest-3029.herokuapp.com/"
+ :license "CC-BY-SA"
+ :repo #.(merge-pathnames "posts/" cl-user::*build-dir*)
+ :title "Systems Software and Stuff"
+ :theme "hyde"
+ :plugins (heroku))
