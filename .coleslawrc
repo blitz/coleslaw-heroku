@@ -1,5 +1,5 @@
 (:author "Julian Stecklina"
- :deploy #.cl-user::*build-dir*
+ :deploy-dir #.cl-user::*build-dir*
  :domain "http://blog.xn--pl-wia.net/"
  :license "CC-BY-SA"
  :repo #.(merge-pathnames "posts/" cl-user::*build-dir*)
