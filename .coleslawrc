@@ -1,8 +1,10 @@
 (:author "Julian Stecklina"
  :deploy-dir #.cl-user::*build-dir*
+ :staging-dir "/tmp/coleslaw/"
  :domain "http://blog.xn--pl-wia.net/"
  :license "CC-BY-SA"
  :repo #.(merge-pathnames "posts/" cl-user::*build-dir*)
  :title "Systems Software and Stuff"
  :theme "hyde"
- :plugins (heroku))
+ :feeds ("programming" "misc")
+ :plugins ((heroku)))
