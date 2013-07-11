@@ -6,5 +6,8 @@
  :repo #.(merge-pathnames "posts/" cl-user::*build-dir*)
  :title "Systems Software and Stuff"
  :theme "hyde"
- :feeds ("programming" "misc")
- :plugins ((heroku)))
+ :feeds ("programming" "c" "lisp" "misc")
+ :plugins ((heroku)
+           (mathjax)
+           (disqus :shortname "os-jsteckli")
+           ))
