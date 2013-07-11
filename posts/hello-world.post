@@ -6,5 +6,9 @@ format: md
 ;;;;;
 ### It's Alive!
 
-Just installed my new blog on Heroku. Let's see how this works
-out. See you later.
+Just installed my new blog on [Heroku](https://heroku.com). It is
+running [Coleslaw](https://github.com/redline6561/coleslaw) blog
+engine on top of [SBCL](http://sbcl.org/).
+
+
+ Let's see how this works out. See you later.
