@@ -1,0 +1,37 @@
+;;;;;
+title: Discovering git imerge
+tags: programming
+date: 2013-08-12 11:30:00
+format: md
+;;;;;
+### The Problem
+
+I have a patchset for Linux 3.4 that is not large by any means, but it
+touches a couple of files in the Linux source. Time has passed and we
+are now at Linux 3.10. How do I get these patches merged or rebased to
+3.10 with the least amount of work?
+
+### The Solution: git imerge
+
+[git imerge](https://github.com/mhagger/git-imerge) is a tool for
+incrementally merging branches in a Git repository. The author gives a
+[pretty good
+introduction](http://softwareswirl.blogspot.de/2013/05/git-imerge-practical-introduction.html)
+of the basics.
+
+Considering that git imerge is still quite experimental, how does it
+fare with a couple of thousands commits to merge? Suprisingly good so
+far. Instead of large conflicts, you get conflicts in small doses
+piece by piece. None of the conflicts were hard to solve. I triggered
+a [small bug](https://github.com/mhagger/git-imerge/issues/29) on my
+way, but with some fiddling got imerge going again.
+
+There are a couple of negative sides as well. The main point being: It
+is **slow**. Not because you have to resolve lots of small conflicts,
+but the time in between, where the tool fills out the 2D commit
+matrix. And when I say slow, I don't mean minutes, but **hours**.
+This leads to the next point. It would be cool if the thing had some
+form of progress indication beyond the 2D commit diagram.
+
+Even with the downsides, **git imerge is great**, because you can
+rebase or merge branches you never hoped to recover again.
