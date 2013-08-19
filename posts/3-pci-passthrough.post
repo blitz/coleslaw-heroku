@@ -1,0 +1,19 @@
+;;;;;
+title: Linux VFIO
+tags: programming
+date: 2013-08-20 01:41:00
+format: md
+;;;;;
+
+The Linux [VFIO](http://lwn.net/Articles/391459/) framework can be used to
+give virtual machines access to physical PCI devices (PCI passthrough)
+or to use PCI devices in userspace safely.
+
+As of Linux 3.10, I wouldn't use either feature for a production system:
+
+- Registering large memory regions as DMA-able via VFIO triggers an [Intel IOMMU kernel bug](https://bugzilla.redhat.com/show_bug.cgi?id=998732) reproducibly.
+
+- PCI devices can trigger IRQs when Linux already believes the corresponding userspace app is gone. It then interprets the IRQ as spurious IRQ. Since my particular device shares its legacy PCI IRQ with the USB controller, it messes up IRQ handling for USB and my mouse gets jerky and the keyboard loses key presses. Haven't gotten around to filing a bug for this yet.
+
+I have the feeling that the IOMMU code gets far too little exercise to
+be considered stable and robust.
