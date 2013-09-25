@@ -1,0 +1,84 @@
+;;;;;
+title: btsync on FreeBSD and Fedora
+tags: programming
+date: 2013-09-26 00:26:00
+format: md
+;;;;;
+
+[BitTorrent Sync](http://labs.bittorrent.com/experiments/sync.html) is
+an experimental tool to synchronize folders across your devices
+without a cloud. There are clients for all major operating systems,
+from Windows over Android to Linux and FreeBSD. If it works as
+advertised, you do not expose your data to any cloud provider, such as
+Dropbox or Google Drive.
+
+The Linux and FreeBSD clients are meant for servers or NAS-like
+devices and offer a web frontend on
+[http://localhost:8888/](http://localhost:8888/). Don't forget to set
+a password for the [btsync web GUI](http://localhost:8888/) or better
+yet block access to this port entirely as btsync is listening for
+connections from anyone in the net.
+
+To get it working, download the appropriate binary from their
+site. For convenience, I put it into `$HOME/bin/btsync`. The program
+is a bit weird in that it keeps its configuration in the directory
+where the binary is in a directory called `.sync`. You can probably
+change this, but I didn't bother.
+
+Getting btsync to start at boot on FreeBSD is rather trivial. Just
+adapt any of the existing init scripts. My
+`/usr/local/etc/rc.d/btsync` init script looks like this:
+
+
+```shell
+#!/bin/sh
+#
+
+# PROVIDE: btsync
+# REQUIRE: LOGIN
+# KEYWORD: shutdown
+
+# Add the following line to /etc/rc.conf to enable btsync:
+#
+#btsync_enable="YES"
+
+. /etc/rc.subr
+
+name=btsync
+rcvar=btsync_enable
+
+pidfile=/var/run/btsync.pid
+command=/usr/sbin/daemon
+command_args="-p ${pidfile} -u julian /home/julian/bin/btsync --nodaemon"
+
+load_rc_config $name
+
+: ${btsync_enable="NO"}
+
+run_rc_command "$1"
+```
+
+If you reuse this, don't forget to change the hardcoded username. Add
+`btsync_enable=YES` to `/etc/rc.conf` and you are all set.
+
+For Fedora, we want a systemd startup script. Fedora has [some hints](http://docs.fedoraproject.org/en-US/Fedora/19/html/Installation_Guide/s1-boot-init-shutdown-run-boot.html) and there are [bits](http://www.freedesktop.org/software/systemd/man/systemd.exec.html) and [pieces](http://www.freedesktop.org/software/systemd/man/systemd.service.html) in the systemd man pages. I ended up with the following:
+
+```
+[Unit]
+Description=BitTorrent Sync
+Wants=network.target
+
+[Service]
+ExecStart=/home/julian/bin/btsync --nodaemon
+Type=simple
+User=julian
+
+[Install]
+WantedBy=multi-user.target
+
+```
+
+Put this into `/lib/systemd/system/btsync.service`. After that you can
+start btsync using `systemctl start btsync`. Starting it at boot is
+just a `systemctl enable btsync` away. If you want btsync to have the
+lowest priority add `Nice=19` in the `[Service]` section.
